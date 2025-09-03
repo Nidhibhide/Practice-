@@ -1,0 +1,2 @@
+# Always use LF line endings (good for Linux servers like Vercel/Netlify)
+* text=auto eol=lf
