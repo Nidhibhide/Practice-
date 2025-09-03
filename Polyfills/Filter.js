@@ -4,7 +4,7 @@ function func(val, index, array) {
   return val % 2 == 0;
 }
 // const result=arr.filter(func);
-Array.prototype.myFilter = function () {
+Array.prototype.myFilter = function (func) {
   let value;
   const result = [];
   for (i = 0; i < arr.length; i++) {

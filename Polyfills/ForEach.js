@@ -5,7 +5,7 @@ function func(num, index, array) {
 }
 
 //pollyfills
-Array.prototype.myForEach = function () {
+Array.prototype.myForEach = function (func) {
   for (i = 0; i < arr.length; i++) {
     func(arr[i], i, arr);
   }

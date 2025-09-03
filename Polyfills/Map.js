@@ -4,7 +4,7 @@ function func(val, index, array) {
   return val * 2;
 }
 
-Array.prototype.myMap = function () {
+Array.prototype.myMap = function (func) {
   const result = [];
   let value;
   for (i = 0; i < arr.length; i++) {

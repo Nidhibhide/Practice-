@@ -1,2 +1,11 @@
 # Always use LF line endings (good for Linux servers like Vercel/Netlify)
 * text=auto eol=lf
+
+# Force LF line endings for all text files
+* text=auto eol=lf
+
+# Specific for TypeScript/JavaScript files
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.jsx text eol=lf
