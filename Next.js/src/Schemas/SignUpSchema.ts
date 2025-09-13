@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const SignUpValidation = z.object({
+export const SignUpSchema = z.object({
   name: z
     .string()
     .min(3, "Name must be atleast 3 characters")

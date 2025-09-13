@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-
+import { Toaster } from "@/components/ui/sonner"
 import "./globals.css";
 import AuthProvider from "@/context/AuthProvider";
 
@@ -16,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <AuthProvider>
-        <body>{children}</body>
+        <body>{children}
+           <Toaster />
+        </body>
       </AuthProvider>
     </html>
   );
