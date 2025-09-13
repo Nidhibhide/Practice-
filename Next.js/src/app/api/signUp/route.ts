@@ -5,8 +5,8 @@ import { sendVerificationEmail } from "@/utils/EmailVerification";
 export async function POST(request: Request) {
   await dbConnect();
   try {
+  
     const { password, name, email } = await request.json();
-
     const existingUserByEmail = await User.findOne({ email });
     let verifyCode = Math.floor(100000 + Math.random() * 900000).toString();
     const expiryDate = new Date();
@@ -40,7 +40,6 @@ export async function POST(request: Request) {
       });
       await newUser.save();
     }
-
     //send verification email
     const emailResponse = await sendVerificationEmail(email, verifyCode);
     if (!emailResponse.success) {
