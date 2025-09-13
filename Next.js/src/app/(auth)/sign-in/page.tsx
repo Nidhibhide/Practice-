@@ -1,21 +1,113 @@
+"use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-'use client'
-import { useSession, signIn, signOut } from "next-auth/react"
+import { useState } from "react";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-export default function Component() {
-  const { data: session } = useSession()
-  if (session) {
-    return (
-      <>
-        Signed in as {session.user.email} <br />
-        <button onClick={() => signOut()}>Sign out</button>
-      </>
-    )
-  }
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { SignInSchema } from "@/Schemas/SignInSchema";
+import { signIn } from "next-auth/react";
+const page = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
+
+  //zod implementation
+  const form = useForm<z.infer<typeof SignInSchema>>({
+    resolver: zodResolver(SignInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+  const onSubmit = async (data: z.infer<typeof SignInSchema>) => {
+    setIsSubmitting(true);
+
+    const response = await signIn("credentials", {
+      redirect: false,
+      email: data.email,
+      password: data.password,
+    });
+    console.log(response);
+    if (response?.error) {
+      if (response.error === "CredentialsSignin") {
+        toast("Login Failed");
+      } else {
+        toast(response.error);
+      }
+    }
+    if (response?.url) {
+      router.replace("/dashboard");
+      // toast("Login Successful")
+    }
+
+    setIsSubmitting(false);
+  };
   return (
-    <>
-      Not signed in <br />
-      <button className="bg-red-500 text-white m-4 px-3 py-1 rounded-lg cursor-pointer" onClick={() => signIn()} >Sign in</button>
-    </>
-  )
-}
+    <div className="flex justify-center items-center min-h-screen bg-gray-800">
+      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
+        <div className="text-center">
+          <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
+            Join True Feedback
+          </h1>
+          <p className="mb-4">Sign up to start your anonymous adventure</p>
+        </div>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              name="email"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input type="email" placeholder="email" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="password"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="Password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait
+                </>
+              ) : (
+                "SignIn"
+              )}
+            </Button>
+          </form>
+        </Form>
+      </div>
+    </div>
+  );
+};
+export default page;
+
+// If you’re in /pages, use next/router.
+// If you’re in /app, use next/navigation (and use useParams, usePathname, useSearchParams for route data).
